@@ -18,14 +18,24 @@ if (!firebase.apps.length) {
 }
 const firestore = firebase.firestore();
 
-const servers = {
-  iceServers: [
-    {
-      urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
-    },
-  ],
-  iceCandidatePoolSize: 10,
-};
+const servers = null;
+// const servers = {
+//   iceServers: [
+//     {
+//       urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
+//     },
+
+//     // {
+//     //   "urls": "stun:vc.example.com:3478"
+//     // },
+//     // {
+//     //   "urls": "turn:vc.example.com:3478",
+//     //   "username": "coturnUser",
+//     //   "credential": "coturnUserPassword"
+//     // }
+//   ],
+//   iceCandidatePoolSize: 10,
+// };
 
 // Global State
 const pc = new RTCPeerConnection(servers);
