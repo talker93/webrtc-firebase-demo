@@ -18,24 +18,24 @@ if (!firebase.apps.length) {
 }
 const firestore = firebase.firestore();
 
-const servers = null;
-// const servers = {
-//   iceServers: [
-//     {
-//       urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
-//     },
+// const servers = null;
+const servers = {
+  iceServers: [
+    {
+      urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
+    },
 
-//     // {
-//     //   "urls": "stun:vc.example.com:3478"
-//     // },
-//     // {
-//     //   "urls": "turn:vc.example.com:3478",
-//     //   "username": "coturnUser",
-//     //   "credential": "coturnUserPassword"
-//     // }
-//   ],
-//   iceCandidatePoolSize: 10,
-// };
+    // {
+    //   "urls": "stun:vc.example.com:3478"
+    // },
+    // {
+    //   "urls": "turn:vc.example.com:3478",
+    //   "username": "coturnUser",
+    //   "credential": "coturnUserPassword"
+    // }
+  ],
+  iceCandidatePoolSize: 10,
+};
 
 // Global State
 const pc = new RTCPeerConnection(servers);
@@ -94,6 +94,8 @@ callButton.onclick = async () => {
   // Create offer
   const offerDescription = await pc.createOffer();
   await pc.setLocalDescription(offerDescription);
+  console.log("offerdescription from pa")
+  console.log(offerDescription)
 
   const offer = {
     sdp: offerDescription.sdp,
@@ -101,6 +103,8 @@ callButton.onclick = async () => {
   };
 
   await callDoc.set({ offer });
+  console.log("offer from pa")
+  console.log(offer)
 
   // Listen for remote answer
   callDoc.onSnapshot((snapshot) => {
@@ -108,6 +112,8 @@ callButton.onclick = async () => {
     if (!pc.currentRemoteDescription && data?.answer) {
       const answerDescription = new RTCSessionDescription(data.answer);
       pc.setRemoteDescription(answerDescription);
+      console.log("answerdescription from pa")
+      console.log(answerDescription)
     }
   });
 
@@ -117,6 +123,8 @@ callButton.onclick = async () => {
       if (change.type === 'added') {
         const candidate = new RTCIceCandidate(change.doc.data());
         pc.addIceCandidate(candidate);
+        console.log("candidate from pa")
+        console.log(candidate)
       }
     });
   });
@@ -136,12 +144,15 @@ answerButton.onclick = async () => {
   };
 
   const callData = (await callDoc.get()).data();
+  console.log(callData)
 
   const offerDescription = callData.offer;
   await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
 
   const answerDescription = await pc.createAnswer();
   await pc.setLocalDescription(answerDescription);
+  console.log("answerdescription from pb")
+  console.log(answerDescription)
 
   const answer = {
     type: answerDescription.type,
@@ -149,10 +160,12 @@ answerButton.onclick = async () => {
   };
 
   await callDoc.update({ answer });
+  console.log("answer from pb")
+  console.log(answer)
 
   offerCandidates.onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
-      console.log(change);
+      // console.log(change);
       if (change.type === 'added') {
         let data = change.doc.data();
         pc.addIceCandidate(new RTCIceCandidate(data));
