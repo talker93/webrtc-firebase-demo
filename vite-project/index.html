@@ -11,10 +11,24 @@
     <div class="videos">
       <span>
         <h3>Local Stream</h3>
+        <div class="select">
+          <label for="accept">
+            <input type="checkbox" id="muteMonitor" name="accept" value="yes" checked="true">  Mute Monitoring Signal 
+         </label>
+        </div>
+        <div class="select">
+          <label for="audioSource">Audio input source: </label><select id="audioSource"></select>
+        </div>
+        <div class="select">
+            <label for="videoSource">Video source: </label><select id="videoSource"></select>
+        </div>
         <video id="webcamVideo" autoplay playsinline></video>
       </span>
       <span>
         <h3>Remote Stream</h3>
+        <div class="select">
+            <label for="audioOutput">Audio output destination: </label><select id="audioOutput"></select>
+        </div>
         <video id="remoteVideo" autoplay playsinline></video>
       </span>
 
